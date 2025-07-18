@@ -1,0 +1,25 @@
+127.0.0.1 localhost
+::1 localhost ip6-localhost ip6-loopback
+
+## Public IP addresses
+172.20.1.170 racnode1.example.info racnode1
+172.20.1.171 racnode2.example.info racnode2
+
+## Virtual IP addresses
+172.20.1.200 racnode1-vip.example.info racnode1-vip
+172.20.1.201 racnode2-vip.example.info racnode2-vip
+
+## SCAN IPs
+172.20.1.236 racnodec1-scan.example.info racnodec1-scan
+
+## Private IPs
+192.168.100.170 racnode1-priv.example.info racnode1-priv
+192.168.100.171 racnode2-priv.example.info racnode2-priv
+~                                                                                                                                                             
+~                                                                                                                                                             
+~                                                                                                                                                             
+~                                                                                                                                                             
+~                                                                                                                                                             
+~                                                                                                                                                             
+~                                                                                                                                                             
+~                                           

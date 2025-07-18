@@ -1,0 +1,48 @@
+
+#!/bin/bash
+podman rm racnode2
+podman create -t -i \
+--hostname racnode2 \
+--dns-search "example.info" \
+--dns 172.20.1.250 \
+--shm-size 4G \
+--cpuset-cpus 0-1 \
+--memory 16G \
+--memory-swap 32G \
+--sysctl kernel.shmall=2097152  \
+--sysctl "kernel.sem=250 32000 100 128" \
+--sysctl kernel.shmmax=8589934592  \
+--sysctl kernel.shmmni=4096 \
+--sysctl 'net.ipv4.conf.eth1.rp_filter=2' \
+--health-cmd "/bin/python3 /opt/scripts/startup/scripts/main.py --checkracstatus" \
+--cap-add=SYS_RESOURCE \
+--cap-add=NET_ADMIN \
+--cap-add=SYS_NICE \
+--cap-add=AUDIT_WRITE \
+--cap-add=AUDIT_CONTROL \
+--cap-add=NET_RAW \
+--secret pwdsecret \
+--secret keysecret \
+-e DNS_SERVERS="172.20.1.250" \
+-e DB_SERVICE=service:soepdb \
+-e CRS_PRIVATE_IP1=192.168.100.171 \
+-e CRS_NODES="\"pubhost:racnode1,viphost:racnode1-vip;pubhost:racnode2,viphost:racnode2-vip\"" \
+-e SCAN_NAME=racnodec1-scan \
+-e INIT_SGA_SIZE=3G \
+-e INIT_PGA_SIZE=2G \
+-e INSTALL_NODE=racnode1 \
+-e DB_PWD_FILE=pwdsecret \
+-e PWD_KEY=keysecret \
+--device=/dev/sdb3:/dev/asm-disk1:rw \
+-e CRS_ASM_DEVICE_LIST=/dev/asm-disk1 \
+-e OP_TYPE=setuprac \
+-p 7045:22 \
+--restart=always \
+--ulimit rtprio=99 \
+--systemd=always \
+--name racnode2 \
+phx.ocir.io/intsanjaysingh/oracle/database-rac:21.16.0-final 
+podman network disconnect podman racnode2
+podman network connect rac_pub1_nw --ip 172.20.1.171 racnode2
+podman network connect rac_priv1_nw --ip 192.168.100.171  racnode2
+
